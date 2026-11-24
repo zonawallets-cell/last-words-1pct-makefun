@@ -27,6 +27,7 @@ Why this line wins against the judge brief, criterion by criterion:
 """
 
 import os
+import unicodedata
 
 LINE = (
     "I've been at 1% for 45 minutes. "
@@ -51,6 +52,8 @@ def validate(text):
         raise SystemExit("line exceeds %d chars: %d" % (MAX_CHARS, len(text)))
     if "\n" in text or "\r" in text:
         raise SystemExit("line must not contain a newline")
+    if any(unicodedata.category(ch) == "Cc" for ch in text):
+        raise SystemExit("line must not contain control characters")
     text.encode("utf-8")  # raises if not valid UTF-8
     return text
 
